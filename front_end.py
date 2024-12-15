@@ -29,58 +29,42 @@ def process_data(input):
     #TEMP for the model, which should return the prices in an array
     #print(input)
     matrix = generate_data(input)
-    #print(matrix)
+    #print("Matrix",matrix)
     
     answer = np.array([[np.max(matrix[:, 0])], [np.min(matrix[:, 1])], [np.mean(matrix[:, 2])]])
     answer = np.round(answer, 2)
     #print(answer)
     
-    names = np.array([["Highest NVDA Price"], ["Lowest NVDA Price"], ["Average NVDA Price"]])
+    names = np.array([["Highest NVDA Price"], ["Lowest NVDA Price"], ["Average NVDA Closing Price"]])
     organized_matrix = np.hstack((names, answer))
- 
-   # action_matrix = np.random.randint(1, 101, size=(5, 3)) #element 0 is for NVDA stock #, element 1 is for NVDQ stock #, element 2 is net value 
     
-   # action_matrix[0][0] = 10000 #NVDA init
-   # action_matrix[0][1] = 100000 #NVDQ init
-    
-    
-    # for i in range(0,5):
-        # #calculate net price of the day MODIFY MATRIX INDEX TO OPEN PRICE
-        # action_matrix[i][2] = action_matrix[i][0] * matrix[i][0] + action_matrix[i][1] * matrix[i][4] 
-        
-        
-        # if(matrix[i][0] == matrix[i][4]):
-            # decision_results[i] = 'IDLE'
-        # elif(matrix[i][0] > matrix[i][4]):
-           # action_matrix[i][0] = 110000
-           # action_matrix[i][1] = 0
-           # if (i != 4):
-               # action_matrix[i+1][0] = 110000
-               # action_matrix[i+1][1] = 0
-           # decision_results[i] = 'BULLISH'
-        # else:
-           # action_matrix[i][0] = 0
-           # action_matrix[i][1] = 110000
-           # if (i != 4):
-               # action_matrix[i+1][0] = 0
-               # action_matrix[i+1][1] = 110000
-           # decision_results[i] = 'BEARISH'
-        
-        # if (i != 0):
-            # if (action_matrix[i][0] == action_matrix[i-1][0]):
-                # decision_results[i] = 'IDLE'
-           
-        # action_matrix[i][2] = action_matrix[i][0] * matrix[i][0] + action_matrix[i][1] * matrix[i][4]   #update after comparsion 
-    
-    # result_array = np.hstack((result_array, decision_results))   
-    # result_array = np.hstack((result_array, action_matrix))    
-    
-    # print(action_matrix)
-    # final_nvda_stock_shares = action_matrix[4][0]
-    # final_nvdq_stock_shares = action_matrix[4][1]
-    # final_price = action_matrix[4][0] * matrix[4][3] + action_matrix[4][1] * matrix[4][7] 
-    
-    decision_results[:] = "IDLE"
+    #choose an action to take
+    #NVDA_shares = 10000
+    #NVDQ_shares = 100000
+
+    final_money = 0
+    shares = 'NONE'
+
+    for i in range(len(matrix)):
+       
+       #find out which stock has the higher open price
+       NVDA_open_price = matrix[i][3]
+       NVDQ_open_price = matrix[i][9]
+       #print("NVDA Open Price:",NVDA_open_price)
+       #print("NVDQ Open Price:",NVDQ_open_price)
+
+       
+       if NVDA_open_price > NVDQ_open_price and shares != 'NVDA': #NVDA is higher + it's not alr in nvda
+          decision_results[i] = "BULLISH"
+          shares = 'NVDA'
+       elif NVDA_open_price < NVDQ_open_price and shares != 'NVDQ': #NVDQ is higher + not already NVDQ
+          decision_results[i] = "BEARISH"
+          shares = 'NVDQ'
+       else:
+          decision_results[i] = "IDLE"
+       
+
+    #decision_results[:] = "IDLE"
     decision_results = np.hstack((date_results, decision_results))
     
     return organized_matrix, decision_results
@@ -227,13 +211,17 @@ def generate_data(input_date):
       if latest_date_avaiable.weekday() == 5 or latest_date_avaiable.weekday() == 6: #skip saturday and sunday
           continue
       predictions = lr_model.predict(latest_input_query)
+
+      
       #predictions = best_model.predict(latest_input_query)
       results[i, :] = predictions
       latest_input_query['Date'] = int(latest_date_avaiable.timestamp()) * 10**9
       latest_input_query.iloc[:, 1:] = predictions
       i += 1
+
+      
   
-    return results[:, :3]
+    return results
 
   
 @app.route('/', methods=['GET', 'POST'])
@@ -249,4 +237,4 @@ def process_user_request():
 
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5001)))
