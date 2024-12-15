@@ -32,11 +32,11 @@ def process_data(input):
     #print(matrix)
     
     answer = np.array([[np.max(matrix[:, 0])], [np.min(matrix[:, 1])], [np.mean(matrix[:, 2])]])
+    answer = np.round(answer, 2)
     #print(answer)
     
     names = np.array([["Highest NVDA Price"], ["Lowest NVDA Price"], ["Average NVDA Price"]])
     organized_matrix = np.hstack((names, answer))
-    organized_matrix = np.round(organized_matrix, 2)
  
    # action_matrix = np.random.randint(1, 101, size=(5, 3)) #element 0 is for NVDA stock #, element 1 is for NVDQ stock #, element 2 is net value 
     
