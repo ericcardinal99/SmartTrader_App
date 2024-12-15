@@ -36,6 +36,7 @@ def process_data(input):
     
     names = np.array([["Highest NVDA Price"], ["Lowest NVDA Price"], ["Average NVDA Price"]])
     organized_matrix = np.hstack((names, answer))
+    organized_matrix = np.round(organized_matrix, 2)
  
    # action_matrix = np.random.randint(1, 101, size=(5, 3)) #element 0 is for NVDA stock #, element 1 is for NVDQ stock #, element 2 is net value 
     
@@ -231,9 +232,7 @@ def generate_data(input_date):
       latest_input_query['Date'] = int(latest_date_avaiable.timestamp()) * 10**9
       latest_input_query.iloc[:, 1:] = predictions
       i += 1
-      
-    results = np.round(results, 2)
-    
+  
     return results[:, :3]
 
   
