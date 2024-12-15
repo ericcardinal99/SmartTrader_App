@@ -45,23 +45,36 @@ def process_data(input):
     final_money = 0
     shares = 'NONE'
 
-    for i in range(len(matrix)):
+    for i in range(len(matrix)-1):
        
-       #find out which stock has the higher open price
-       NVDA_open_price = matrix[i][3]
-       NVDQ_open_price = matrix[i][9]
-       #print("NVDA Open Price:",NVDA_open_price)
-       #print("NVDQ Open Price:",NVDQ_open_price)
+        #find out which stock has the higher open price
+        NVDA_open_price = matrix[i][3]
+        NVDQ_open_price = matrix[i][9]
+        #print("NVDA Open Price:",NVDA_open_price)
+        #print("NVDQ Open Price:",NVDQ_open_price)
+
+        NVDA_next_day_open = matrix[i+1][3]
+        NVDQ_next_day_open = matrix[i+1][9]
+
+        
+
+        NVDA_percent_change = (NVDA_next_day_open - NVDA_open_price) / NVDA_open_price
+        NVDQ_percent_change = (NVDQ_next_day_open - NVDQ_open_price) / NVDQ_open_price
+
+        print("Day",i+1," NVDA percent change:",NVDA_percent_change)
+        print("Day",i+1," NVDQ percent change:",NVDQ_percent_change)
+        print('---')
+       
+        if NVDA_percent_change > NVDQ_percent_change:
+            decision_results[i] = "BULLISH"
+        elif NVDA_percent_change < NVDQ_percent_change:
+            decision_results[i] = "BEARISH"
+        else:
+            decision_results[i] = "IDLE" 
+
+        
 
        
-       if NVDA_open_price > NVDQ_open_price and shares != 'NVDA': #NVDA is higher + it's not alr in nvda
-          decision_results[i] = "BULLISH"
-          shares = 'NVDA'
-       elif NVDA_open_price < NVDQ_open_price and shares != 'NVDQ': #NVDQ is higher + not already NVDQ
-          decision_results[i] = "BEARISH"
-          shares = 'NVDQ'
-       else:
-          decision_results[i] = "IDLE"
        
 
     #decision_results[:] = "IDLE"
@@ -203,10 +216,10 @@ def generate_data(input_date):
 
     #print(latest_date_avaiable)
     #print(latest_input_query)
-
-    results = np.zeros((5, 12))
+    
+    results = np.zeros((6, 12))
     i = 0
-    while(i < 5):
+    while(i < 6):
       latest_date_avaiable = latest_date_avaiable + timedelta(days=1)
       if latest_date_avaiable.weekday() == 5 or latest_date_avaiable.weekday() == 6: #skip saturday and sunday
           continue
