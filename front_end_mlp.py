@@ -6,7 +6,6 @@ import random #temp
 import pickle
 import os
 from datetime import timedelta
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.neural_network import MLPRegressor
 from sklearn.metrics import mean_squared_error
