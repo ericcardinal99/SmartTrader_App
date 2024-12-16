@@ -10,4 +10,6 @@ Instructions on how to operate the application:
 2. Press submit.
 3. The resulting NVDA stock prediction and trading strategy recommendation tables will be printed.
 
+Commit history can be found on the Github: https://github.com/ericcardinal99/SmartTrader_App
+
 
