@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 import numpy as np
 import pandas as pd
 import datetime
-import random #temp
 import pickle
 import os
 from datetime import timedelta
