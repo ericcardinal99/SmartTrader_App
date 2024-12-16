@@ -6,10 +6,6 @@ import random #temp
 import pickle
 import os
 from datetime import timedelta
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.neural_network import MLPRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
 
 app = Flask(__name__)
 
